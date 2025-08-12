@@ -1,28 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+import { useProducts, useProductOperations } from "../hooks/useProducts";
+import { useToast } from "../hooks/useToast";
 
 const HomePage = () => {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const { products, loading, error, setProducts } = useProducts();
+  const { updateProduct, deleteProduct } = useProductOperations();
+  const toast = useToast();
+
   const [editingProduct, setEditingProduct] = useState(null);
   const [editForm, setEditForm] = useState({ name: "", price: "", image: "" });
-
-  useEffect(() => {
-    fetchProducts();
-  }, []);
-
-  const fetchProducts = () => {
-    fetch("/api/products")
-      .then((res) => res.json())
-      .then((data) => {
-        setProducts(data.products_data || []);
-        setLoading(false);
-      })
-      .catch((err) => {
-        setError("Failed to fetch products");
-        setLoading(false);
-      });
-  };
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -36,19 +22,21 @@ const HomePage = () => {
   };
 
   const handleDelete = async (id) => {
-    if (!confirm("Are you sure you want to delete this product?")) return;
+    if (!window.confirm("Are you sure you want to delete this product?"))
+      return;
 
+    // Optimistic update
+    const originalProducts = [...products];
     try {
-      const res = await fetch(`/api/products/${id}`, {
-        method: "DELETE",
-      });
-      if (res.ok) {
-        setProducts(products.filter((product) => product._id !== id));
-      } else {
-        alert("Failed to delete product");
-      }
-    } catch (err) {
-      alert("Error deleting product");
+      setProducts(products.filter((product) => product._id !== id));
+
+      await deleteProduct(id);
+      toast.success("Product deleted successfully!");
+    } catch (error) {
+      console.error(error);
+      // Revert on error
+      setProducts(originalProducts);
+      toast.error("Failed to delete product");
     }
   };
 
@@ -64,20 +52,21 @@ const HomePage = () => {
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch(`/api/products/${editingProduct}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(editForm),
-      });
-      if (res.ok) {
-        fetchProducts();
-        setEditingProduct(null);
-        setEditForm({ name: "", price: "", image: "" });
-      } else {
-        alert("Failed to update product");
-      }
-    } catch (err) {
-      alert("Error updating product");
+      await updateProduct(editingProduct, editForm);
+
+      // Update local state optimistically
+      setProducts(
+        products.map((product) =>
+          product._id === editingProduct ? { ...product, ...editForm } : product
+        )
+      );
+
+      setEditingProduct(null);
+      setEditForm({ name: "", price: "", image: "" });
+      toast.success("Product updated successfully!");
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to update product");
     }
   };
 

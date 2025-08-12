@@ -1,33 +1,30 @@
 import React, { useState } from "react";
+import { useProductOperations } from "../hooks/useProducts";
+import { useToast } from "../hooks/useToast";
 
 const CreatePage = () => {
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [image, setImage] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(false);
+
+  const { createProduct, loading } = useProductOperations();
+  const toast = useToast();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setError(null);
-    setSuccess(false);
+
     try {
-      const res = await fetch("/api/products", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, price, image }),
-      });
-      if (!res.ok) throw new Error("Failed to create product");
-      setSuccess(true);
+      await createProduct({ name, price, image });
+
+      // Reset form
       setName("");
       setPrice("");
       setImage("");
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
+
+      toast.success("Product created successfully!");
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to create product");
     }
   };
 
@@ -144,51 +141,6 @@ const CreatePage = () => {
                 )}
               </button>
             </div>
-
-            {/* Status Messages */}
-            {error && (
-              <div className="mt-6 bg-red-50 border-l-4 border-red-400 p-4 rounded-lg">
-                <div className="flex items-center">
-                  <svg
-                    className="w-5 h-5 text-red-400 mr-2"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                    ></path>
-                  </svg>
-                  <p className="text-red-700 font-medium">{error}</p>
-                </div>
-              </div>
-            )}
-
-            {success && (
-              <div className="mt-6 bg-green-50 border-l-4 border-green-400 p-4 rounded-lg">
-                <div className="flex items-center">
-                  <svg
-                    className="w-5 h-5 text-green-400 mr-2"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M5 13l4 4L19 7"
-                    ></path>
-                  </svg>
-                  <p className="text-green-700 font-medium">
-                    Product created successfully!
-                  </p>
-                </div>
-              </div>
-            )}
           </form>
         </div>
       </div>

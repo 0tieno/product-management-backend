@@ -14,7 +14,11 @@ const Navbar = () => {
       <div className="container mx-auto px-4 sm:px-6 py-4">
         <div className="flex justify-between items-center">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-3" onClick={() => setIsMobileMenuOpen(false)}>
+          <Link
+            to="/"
+            className="flex items-center space-x-3"
+            onClick={() => setIsMobileMenuOpen(false)}
+          >
             <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center">
               <svg
                 className="w-6 h-6 text-white"
@@ -100,7 +104,9 @@ const Navbar = () => {
             aria-label="Toggle mobile menu"
           >
             <svg
-              className={`w-6 h-6 transition-transform duration-300 ${isMobileMenuOpen ? 'rotate-90' : ''}`}
+              className={`w-6 h-6 transition-transform duration-300 ${
+                isMobileMenuOpen ? "rotate-90" : ""
+              }`}
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -125,11 +131,13 @@ const Navbar = () => {
         </div>
 
         {/* Mobile Menu */}
-        <div className={`md:hidden transition-all duration-300 ease-in-out ${
-          isMobileMenuOpen 
-            ? 'max-h-96 opacity-100 mt-4' 
-            : 'max-h-0 opacity-0 overflow-hidden'
-        }`}>
+        <div
+          className={`md:hidden transition-all duration-300 ease-in-out ${
+            isMobileMenuOpen
+              ? "max-h-96 opacity-100 mt-4"
+              : "max-h-0 opacity-0 overflow-hidden"
+          }`}
+        >
           <div className="pb-4 space-y-2">
             <Link
               to="/"
