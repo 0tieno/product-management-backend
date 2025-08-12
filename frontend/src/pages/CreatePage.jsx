@@ -1,9 +1,199 @@
-import React from 'react'
+import React, { useState } from "react";
 
 const CreatePage = () => {
-  return (
-    <div>CreatePage</div>
-  )
-}
+  const [name, setName] = useState("");
+  const [price, setPrice] = useState("");
+  const [image, setImage] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(false);
 
-export default CreatePage
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+    setSuccess(false);
+    try {
+      const res = await fetch("/api/products", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, price, image }),
+      });
+      if (!res.ok) throw new Error("Failed to create product");
+      setSuccess(true);
+      setName("");
+      setPrice("");
+      setImage("");
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-gray-100">
+      <div className="container mx-auto px-4 py-8">
+        {/* Header */}
+        <div className="mb-12 text-center">
+          <h1 className="text-4xl font-bold text-gray-900 mb-2">
+            Create New Product
+          </h1>
+          <p className="text-gray-600">Add a new product to your inventory</p>
+        </div>
+
+        {/* Form */}
+        <div className="max-w-2xl mx-auto">
+          <form
+            className="bg-white shadow-xl rounded-3xl p-8 border border-gray-100"
+            onSubmit={handleSubmit}
+          >
+            <div className="space-y-6">
+              {/* Name Field */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-3">
+                  Product Name
+                </label>
+                <input
+                  type="text"
+                  className="w-full px-4 py-4 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-900 placeholder-gray-500"
+                  placeholder="Enter product name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                />
+              </div>
+
+              {/* Price Field */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-3">
+                  Price ($)
+                </label>
+                <input
+                  type="number"
+                  className="w-full px-4 py-4 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-900 placeholder-gray-500"
+                  placeholder="0.00"
+                  value={price}
+                  onChange={(e) => setPrice(e.target.value)}
+                  required
+                  min="0"
+                  step="0.01"
+                />
+              </div>
+
+              {/* Image URL Field */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-3">
+                  Image URL
+                </label>
+                <input
+                  type="text"
+                  className="w-full px-4 py-4 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-900 placeholder-gray-500"
+                  placeholder="https://example.com/image.jpg"
+                  value={image}
+                  onChange={(e) => setImage(e.target.value)}
+                  required
+                />
+                {image && (
+                  <div className="mt-4">
+                    <p className="text-sm font-medium text-gray-700 mb-2">
+                      Preview:
+                    </p>
+                    <img
+                      src={image}
+                      alt="Preview"
+                      className="w-full h-40 object-cover rounded-xl border border-gray-200"
+                      onError={(e) => {
+                        e.target.style.display = "none";
+                      }}
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Submit Button */}
+            <div className="mt-8">
+              <button
+                type="submit"
+                className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white px-8 py-4 rounded-2xl font-semibold hover:from-blue-700 hover:to-blue-800 transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3"
+                disabled={loading}
+              >
+                {loading ? (
+                  <>
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                    Creating Product...
+                  </>
+                ) : (
+                  <>
+                    <svg
+                      className="w-5 h-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M12 4v16m8-8H4"
+                      ></path>
+                    </svg>
+                    Create Product
+                  </>
+                )}
+              </button>
+            </div>
+
+            {/* Status Messages */}
+            {error && (
+              <div className="mt-6 bg-red-50 border-l-4 border-red-400 p-4 rounded-lg">
+                <div className="flex items-center">
+                  <svg
+                    className="w-5 h-5 text-red-400 mr-2"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    ></path>
+                  </svg>
+                  <p className="text-red-700 font-medium">{error}</p>
+                </div>
+              </div>
+            )}
+
+            {success && (
+              <div className="mt-6 bg-green-50 border-l-4 border-green-400 p-4 rounded-lg">
+                <div className="flex items-center">
+                  <svg
+                    className="w-5 h-5 text-green-400 mr-2"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M5 13l4 4L19 7"
+                    ></path>
+                  </svg>
+                  <p className="text-green-700 font-medium">
+                    Product created successfully!
+                  </p>
+                </div>
+              </div>
+            )}
+          </form>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default CreatePage;

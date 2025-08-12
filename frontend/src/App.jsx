@@ -1,24 +1,20 @@
 import { Route, Routes } from "react-router-dom";
-import { Box } from "@chakra-ui/react";
 import CreatePage from "./pages/CreatePage";
 import HomePage from "./pages/HomePage";
 import Navbar from "./components/Navbar";
 
 function App() {
-
   return (
-    <Box minH="100vh" py="12" px={{ base: "4", md: "8" }}>
-      
+    <div className="min-h-screen bg-gray-50">
       {/* navbar */}
       <Navbar />
-      
       {/* main content */}
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/create" element={<CreatePage />} />
       </Routes>
-    </Box>
-  )
+    </div>
+  );
 }
 
-export default App
+export default App;
