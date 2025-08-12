@@ -38,7 +38,7 @@ const Navbar = () => {
               <h1 className="text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
                 Product Hub
               </h1>
-              <p className="text-xs text-gray-500">Modern Dashboard</p>
+              <p className="text-xs text-gray-500">built while learning backend swe with MERN</p>
             </div>
             <div className="sm:hidden">
               <h1 className="text-lg font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
