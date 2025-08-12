@@ -56,6 +56,17 @@ This project is a complete product management system that allows users to create
 - 🔍 **Data Validation**: Comprehensive input validation
 - 📊 **Error Handling**: Proper HTTP status codes and error messages
 - 🕒 **Timestamps**: Automatic creation and update timestamps
+  
+## 📚 Learning Notes
+
+### Key Concepts Implemented
+
+1. **Creating DB models with MongoDB**: Implemented using Mongoose schemas with validation and timestamps
+2. **Routing with Express**: RESTful API routes with proper HTTP methods and status codes
+3. **Handling requests and responses**: Comprehensive request validation and structured response formats
+4. **Modern React Patterns**: Custom hooks, Context API, and component composition
+5. **Responsive Design**: Mobile-first approach with Tailwind CSS
+6. **State Management**: Optimistic updates and centralized toast notifications
 
 ## 🛠️ Tech Stack
 
@@ -530,29 +541,6 @@ mongosh
 - Delete `node_modules` and `package-lock.json`
 - Run `npm install` again
 - Ensure all file imports use correct paths
-
-## 📚 Learning Notes
-
-### Key Concepts Implemented
-
-1. **Creating DB models with MongoDB**: Implemented using Mongoose schemas with validation and timestamps
-2. **Routing with Express**: RESTful API routes with proper HTTP methods and status codes
-3. **Handling requests and responses**: Comprehensive request validation and structured response formats
-4. **Modern React Patterns**: Custom hooks, Context API, and component composition
-5. **Responsive Design**: Mobile-first approach with Tailwind CSS
-6. **State Management**: Optimistic updates and centralized toast notifications
-
-## 📄 License
-
-This project is licensed under the ISC License.
-
-## 👨‍💻 Author
-
-**0tieno**
-
-- GitHub: [@0tieno](https://github.com/0tieno)
-- Repository: [backend](https://github.com/0tieno/backend)
-
 ---
 
 **Built with ❤️ using the MERN stack and modern web technologies**
